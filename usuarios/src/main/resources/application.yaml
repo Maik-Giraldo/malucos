@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: usuarios
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/malucos
+    username: root
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+server:
+  port: 1234

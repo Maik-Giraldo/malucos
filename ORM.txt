@@ -1,0 +1,17 @@
+JDBC = Java Database Conectivity
+
+SELECT * FROM USERS;
+INSERT INTO USERS ();
+SELECT * FROM USERS WHERE ID = ?;
+
+Object
+Relational // Hibernate // ( JPA ) // herramienta para implementar Hibernate
+Mapping
+
+USERS.findAll();
+USERS.save();
+USERS.findById();
+USERS.findByName("Maik");
+USERS.findByLastname();
+USERS.findByAge();
+USERS.findByEmail();

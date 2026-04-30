@@ -8,5 +8,13 @@ spring:
     password:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+  jpa: # Herramienta JPA
+    hibernate: # ORM Java
+      ddl-auto: none
+    show-sql: true # Muestra en los logs que consulta se esta ejecutando
+    properties: # Configuracion adicional
+      hibernate:
+        "[format_sql]": true # Formatea el lenguaje SQL
+
 server:
   port: 1234

@@ -3,7 +3,12 @@ package com.malucos.usuarios.dto;
 import lombok.Data;
 
 @Data
-public class RegisterRequestDTO {
+public class UserResponseDTO {
+    /**
+     * Nombre del usuario
+     */
+    private Long id;
+
     /**
      * Nombre del usuario
      */

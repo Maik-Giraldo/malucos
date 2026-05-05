@@ -7,5 +7,5 @@ import com.malucos.usuarios.entity.Users;
 
 @Repository // Crea un bean (una instancia)
 public interface UserRepository extends JpaRepository<Users, Long>{
-
+    
 }

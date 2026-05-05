@@ -25,4 +25,7 @@ public class Users {
 
     @Column(name = "age") // Nombre de la columna en la bd
     private Long age; // Variable (alias) usado en springboot referente a esa columna
+
+    @Column(name = "email") // Nombre de la columna en la bd
+    private String email; // Variable (alias) usado en springboot referente a esa columna
 }

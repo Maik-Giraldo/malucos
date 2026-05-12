@@ -67,7 +67,6 @@ public class UserService {
         Users user = userFound.get();
 
         UserResponseDTO userFinal = new UserResponseDTO();
-        userFinal.setMessage("Usuario encontrado");
         userFinal.setId(user.getId());
         userFinal.setName(user.getName());
         userFinal.setLastName(user.getLastname());
@@ -77,6 +76,50 @@ public class UserService {
         response.setMessage("Usuario encontrado");
         response.setData(userFinal);
 
+        return response;
+    }
+
+    public MessageResponseDTO deleteUser(Long id) {
+        MessageResponseDTO response = new MessageResponseDTO();
+
+        Optional<Users> userFound = userRepository.findById(id);
+
+        if (userFound.isEmpty()) {
+            response.setMessage("Usuario no encontrado");
+            return response;
+        }
+
+        userRepository.deleteById(id);
+        response.setMessage("Usuario eliminado exitosamente");
+        return response;
+    }
+
+    public HttpGlobalResponse<UserResponseDTO> updateUser(Long id, RegisterRequestDTO request) {
+        HttpGlobalResponse<UserResponseDTO> response = new HttpGlobalResponse<>();
+
+        Optional<Users> userFound = userRepository.findById(id);
+
+        if(userFound.isEmpty()){
+            response.setMessage("Usuario no encontrado");
+            return response;
+        }
+
+        Users user = userFound.get();
+        user.setName(request.getName());
+        user.setLastname(request.getLastName());
+        user.setEmail(request.getEmail());
+        user.setAge(request.getAge());
+        userRepository.save(user);
+
+        UserResponseDTO userResponseDTO = new UserResponseDTO();
+        userResponseDTO.setId(user.getId());
+        userResponseDTO.setName(user.getName());
+        userResponseDTO.setLastName(user.getLastname());
+        userResponseDTO.setEmail(user.getEmail());
+        userResponseDTO.setAge(user.getAge());
+
+        response.setMessage("Usuario actualizado correctamente");
+        response.setData(userResponseDTO);
         return response;
     }
 }

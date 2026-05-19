@@ -31,8 +31,13 @@ public class UserController {
 
     @PostMapping("/create")
     public ResponseEntity<MessageResponseDTO> createUser(@RequestBody RegisterRequestDTO request) {
-        MessageResponseDTO response = userService.createUser(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        try {
+            MessageResponseDTO response = userService.createUser(request);
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
     }
 
     @GetMapping("/get-users")

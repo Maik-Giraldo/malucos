@@ -23,8 +23,15 @@ public class UserService {
     private final UserRepository userRepository;
 
     public MessageResponseDTO createUser(RegisterRequestDTO request) {
-        // Crea objeto vacio para setearle una respuesta
         MessageResponseDTO response = new MessageResponseDTO();
+        Optional<Users> userFound = userRepository.findByEmail(request.getEmail());
+
+        if(userFound.isPresent()) {
+            response.setMessage("Correo en uso");
+            return response;
+        }
+
+        // Crea objeto vacio para setearle una respuesta
         response.setMessage("Usuario creado correctamente");
 
         // Crea una entidad vacia para guardarla en la base de datos

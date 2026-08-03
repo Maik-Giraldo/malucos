@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -132,5 +133,35 @@ public class JwtService {
      */
     public Long extractRolId(String token) {
         return extractClaims(token, claims -> claims.get("rolId", Long.class));
+    }
+
+    /**
+     * Método para refrescar el token
+     * 
+     * @param token
+     * @return token nuevo
+     * @throws Exception
+     */
+    public String refreshToken(String token) throws Exception {
+        Claims claims;
+
+        try {
+            claims = Jwts.parser()
+                    .verifyWith(getSignKey())
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+        } catch (ExpiredJwtException e) {
+            e.printStackTrace();
+            throw new Exception("Token is expired" + e.getMessage());
+        } catch (JwtException e) {
+            e.printStackTrace();
+            throw new Exception("Token is invalid" + e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception("Hubo un error al validar el token" + e.getMessage());
+        }
+
+        return generateToken(claims.get("userId", Long.class), claims.getSubject(), claims.get("rolId", Long.class));
     }
 }

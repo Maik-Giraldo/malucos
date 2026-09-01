@@ -64,8 +64,6 @@ public class JwtValidationFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
 
-        return path.equals("/auth/login") ||
-                path.equals("/auth/register") ||
-                path.equals("auth/refreshToken");
+        return path.startsWith("/api/v1/users/auth/");
     }
 }

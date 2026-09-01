@@ -15,7 +15,7 @@ spring:
 server:
   port: 9090
   servlet:
-    context-path: api/v1/users # Ruta de contexto de todo el proyecto
+    context-path: /api/v1/users # Ruta de contexto de todo el proyecto
 
 security:
   jwt:

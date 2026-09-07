@@ -1,10 +1,13 @@
 package com.malucos.users.entity;
 
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -21,6 +24,6 @@ public class Roles {
     @Column(name = "name")
     private String name;
 
-    @OneToOne(mappedBy = "rolId")
-    private Users userId;
+    @OneToMany(mappedBy = "rolId")
+    private List<Users> userId;
 }

@@ -1,7 +1,5 @@
 package com.malucos.users.dto;
 
-import com.malucos.users.entity.Roles;
-
 import lombok.Data;
 
 @Data

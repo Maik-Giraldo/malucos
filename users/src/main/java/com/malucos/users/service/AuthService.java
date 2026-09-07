@@ -1,5 +1,6 @@
 package com.malucos.users.service;
 
+import java.lang.StackWalker.Option;
 import java.util.Optional;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -7,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.malucos.users.config.AppConfig;
 import com.malucos.users.dto.HttpGlobalResponseDTO;
+import com.malucos.users.dto.LoginRequestDTO;
+import com.malucos.users.dto.LoginResponseDTO;
 import com.malucos.users.dto.RegisterRequestDTO;
 import com.malucos.users.dto.UserDTO;
 import com.malucos.users.entity.Roles;
@@ -34,6 +37,11 @@ public class AuthService {
      * Encriptador de contraseñas
      */
     private final PasswordEncoder passwordEncoder;
+
+    /**
+     * Servicio de jwt
+     */
+    private final JwtService jwtService;
 
     public HttpGlobalResponseDTO<UserDTO> register(RegisterRequestDTO request) {
         HttpGlobalResponseDTO<UserDTO> response = new HttpGlobalResponseDTO<>();
@@ -73,6 +81,38 @@ public class AuthService {
 
         response.setMessage("Usuario registrado correctamente");
         response.setData(userDTO);
+
+        return response;
+    }
+
+    public HttpGlobalResponseDTO<LoginResponseDTO> login(LoginRequestDTO request) {
+        HttpGlobalResponseDTO<LoginResponseDTO> response = new HttpGlobalResponseDTO<>();
+        Optional<Users> email = usersRepository.findByEmail(request.getUser());
+        Optional<Users> username = usersRepository.findByUsername(request.getUser());
+
+        if (username.isEmpty() && email.isEmpty()){
+            response.setMessage("Usuario y/o contraseña incorrectos");
+            return response;
+        }
+
+        Users userFound;
+
+        if (email.isPresent()) {
+            userFound = email.get();
+        } else {
+            userFound = username.get();
+        }
+        
+        if (!passwordEncoder.matches(request.getPassword(), userFound.getPassword())) {
+            response.setMessage("Usuario y/o contraseña incorrectos");
+            return response;
+        }
+
+        String jwt = jwtService.generateToken(userFound.getId(), userFound.getUsername(), userFound.getRolId());
+        LoginResponseDTO token = new LoginResponseDTO();
+        token.setJwt(jwt);
+        response.setMessage("Inicio de sesión exitoso");
+        response.setData(token);
 
         return response;
     }

@@ -9,8 +9,6 @@ import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.malucos.users.entity.Roles;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -57,10 +55,10 @@ public class JwtService {
      * @param rolId    id del rol del usuario
      * @return String JWT
      */
-    public String generateToken(Long userId, String username, Roles rolId) {
+    public String generateToken(Long userId, String username, Long rolId) {
         return Jwts.builder() // Empezamos a construir el token
                 .claims(Map.of("userId", userId)) // Agregamos datos personalizadios (payload)
-                .claims(Map.of("rolId", rolId.getId())) // Agregamos datos personalizadios (payload)
+                .claims(Map.of("rolId", rolId)) // Agregamos datos personalizadios (payload)
                 .subject(username) // Identificamos al dueño del token
                 .issuedAt(new Date()) // Fecha de creación
                 .expiration(new Date(System.currentTimeMillis() + tokenExpiration)) // Fecha de expiración (fecha actual
@@ -133,8 +131,8 @@ public class JwtService {
      * @param token
      * @return
      */
-    public Roles extractRolId(String token) {
-        return extractClaims(token, claims -> claims.get("rolId", Roles.class));
+    public Long extractRolId(String token) {
+        return extractClaims(token, claims -> claims.get("rolId", Long.class));
     }
 
     /**
@@ -164,6 +162,6 @@ public class JwtService {
             throw new Exception("Hubo un error al validar el token" + e.getMessage());
         }
 
-        return generateToken(claims.get("userId", Long.class), claims.getSubject(), claims.get("rolId", Roles.class));
+        return generateToken(claims.get("userId", Long.class), claims.getSubject(), claims.get("rolId", Long.class));
     }
 }

@@ -70,7 +70,7 @@ public class AuthService {
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRolId(rol.get());
+        user.setRoles(rol.get());
 
         usersRepository.save(user);
 
@@ -108,12 +108,31 @@ public class AuthService {
             return response;
         }
 
-        String jwt = jwtService.generateToken(userFound.getId(), userFound.getUsername(), userFound.getRolId());
+        String jwt = jwtService.generateToken(userFound.getId(), userFound.getUsername(), userFound.getRoles().getId());
         LoginResponseDTO token = new LoginResponseDTO();
         token.setJwt(jwt);
         response.setMessage("Inicio de sesión exitoso");
         response.setData(token);
 
+        return response;
+    }
+
+    public HttpGlobalResponseDTO<LoginResponseDTO> refreshToken(String token) throws Exception {
+        HttpGlobalResponseDTO<LoginResponseDTO> response = new HttpGlobalResponseDTO<>();
+        LoginResponseDTO refresh = new LoginResponseDTO();
+        String jwt = jwtService.refreshToken(token);
+        Long userId = jwtService.extractUserId(token);
+        Optional<Users> userFound = usersRepository.findById(userId);
+        Users user = userFound.get();
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(user.getId());
+        userDTO.setUsername(user.getUsername());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setRolId(user.getRoles().getName());
+        refresh.setJwt(jwt);
+        refresh.setUser(userDTO);
+        response.setMessage("Token refrescado correctamente");
+        response.setData(refresh);
         return response;
     }
 }

@@ -5,17 +5,18 @@ import java.io.IOException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.malucos.users.entity.Roles;
 import com.malucos.users.service.JwtService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 
 @Component
+@RequiredArgsConstructor
 public class JwtValidationFilter extends OncePerRequestFilter {
 
-    private JwtService jwtService;
+    private final JwtService jwtService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -38,7 +39,7 @@ public class JwtValidationFilter extends OncePerRequestFilter {
                 // Extraemos los claims del jwt
                 String username = jwtService.exctractUsername(token);
                 Long userId = jwtService.extractUserId(token);
-                Roles rolId = jwtService.extractRolId(token);
+                Long rolId = jwtService.extractRolId(token);
 
                 // Seteamos los atributos por si mas adelante los necesitamos
                 request.setAttribute("username", username);
@@ -61,10 +62,10 @@ public class JwtValidationFilter extends OncePerRequestFilter {
         }
     }
 
-    // @Override
-    // protected boolean shouldNotFilter(HttpServletRequest request) {
-    //     String path = request.getRequestURI();
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getRequestURI();
 
-    //     return path.startsWith("/api/v1/users/auth/");
-    // }
+        return path.startsWith("/api/v1/users/auth/");
+    }
 }

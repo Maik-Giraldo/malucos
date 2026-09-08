@@ -33,5 +33,5 @@ public class Users {
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "rol_id", referencedColumnName = "id")
-    private Roles rolId;
+    private Roles roles;
 }

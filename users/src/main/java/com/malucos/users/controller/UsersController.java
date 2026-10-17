@@ -24,7 +24,7 @@ public class UsersController {
     private final UsersService usersService;
 
     @GetMapping("/get-users")
-    @RequiresRole(RoleEnum.ADMIN)
+    @RequiresRole({RoleEnum.ADMIN, RoleEnum.CLIENTE})
     public ResponseEntity<HttpGlobalResponseDTO<List<UserDTO>>> getUsers() {
         try {
             HttpGlobalResponseDTO<List<UserDTO>> response = usersService.getUsers();
